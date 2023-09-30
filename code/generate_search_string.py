@@ -5,7 +5,6 @@ trust_part = ["(Trust* OR Ethic* OR Responsible)",
 ai_part = ["((Artificial AND Intelligence) OR AI)",
            "((Artificial AND Intelligence) OR AI OR ML OR (Machine AND Learning))"]
 platform_part = ["Platform", "Development", "Development AND Platform"]
-location_part = ["TITLE", "ABSTRACT"]
 
 genAI_part = [
     "", "NOT (generative OR Transformer* OR ChatGPT OR (Large AND Language AND Model))"]
@@ -20,6 +19,8 @@ for tp in trust_part:
         for plat in platform_part:
             for gen in genAI_part:
                 for prop in property_part:
+                    # build search string for Title and Abstract directly
+                    # after each other
                     search_string = "\nTITLE("
                     search_string += tp + " AND " + ai + " AND " + plat
                     if prop != "":
@@ -37,8 +38,6 @@ for tp in trust_part:
                         search_string += " " + gen
                     search_string += ")"
                     combination_list.append(search_string)
-
-    # print(search_string)
 
 with open("data/search_strings.csv", "w+") as f:
     f.writelines(combination_list)

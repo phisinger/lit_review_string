@@ -1,4 +1,6 @@
 # defining search string parts
+# As IEEE expects the search field (Title or Abstract) always directly
+# before the search term, XY is a placeholder which later replaced.
 trust_part = ["(XYTrust* OR XYEthic* OR XYResponsib*)",
               "XYTrustworthy", "(XYTrustworth* OR XYResponsib*)"]
 ai_part = ["((XYArtificial AND XYIntelligence) OR XYAI)",
@@ -25,14 +27,14 @@ for tp in trust_part:
                             search_string += " AND " + prop
                         if gen != "":
                             search_string += " " + gen
-
+                        # define placeholder replacement and replace
                         new_string = "\"" + location + "\":"
-
                         search_string = search_string.replace("XY", new_string)
 
                         combination_list.append(search_string)
 
     # print(search_string)
 
+# write all search string to csv file
 with open("data/search_strings_ieee.csv", "w+", newline="") as f:
     f.writelines(combination_list)

@@ -5,19 +5,20 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import csv
-
 from time import sleep
 
 # Read search strings
-lit_strings = []
 with open("data/search_strings.csv", "r+", newline="") as csvf:
     reader = csv.reader(csvf, delimiter=",")
+    # define webdriver for browser
     driver = webdriver.Firefox()
     for row in reader:
         if row != []:
             # prepare search string
             search_string = row[0]
+            # Find the index of the first opening parenthesis
             index_of_open_parenthesis = search_string.find("(")
+            # attach abbreviated search field
             search_string = search_string[:2] + \
                 search_string[index_of_open_parenthesis:]
 
@@ -32,11 +33,12 @@ with open("data/search_strings.csv", "r+", newline="") as csvf:
             sleep(4)
 
             # set search settings
+            # unselect search expansion
             equivivalent_subjects = driver.find_element(
                 By.ID, "expand_enhancedsubjectprecision")
             if equivivalent_subjects.is_selected():
                 equivivalent_subjects.click()
-
+            # select peer reviewed
             peer_reviewed = driver.find_element(
                 By.ID, "common_RV")
             if not peer_reviewed.is_selected():
@@ -47,15 +49,13 @@ with open("data/search_strings.csv", "r+", newline="") as csvf:
             search_bar.clear()
             search_bar.send_keys(search_string)
             search_bar.send_keys(Keys.RETURN)
-            # sleep(10)
 
-            # Read
+            # Read number of results
+            # Try for 12 seconds until save fail
             start_time = time.time()
             results = None
             while time.time() <= start_time + 12:
                 try:
-                    # results = driver.find_element(
-                    #     By.XPATH, "/html/body/div[5]/div/div/div[3]/div/xpl-root/main/div")
                     results = driver.find_element(
                         By.CSS_SELECTOR, ".page-title")
                     sleep(0.5)
@@ -63,11 +63,11 @@ with open("data/search_strings.csv", "r+", newline="") as csvf:
                 except Exception as e:
                     # print(e)
                     continue
-
+            # write results directly together with search string into csv file
             with open("data/search_results_ebscohost.csv", "a+", newline="") as csvw:
                 writer = csv.writer(csvw, delimiter=";")
                 if results == None:
-                    writer.writerow((search_string, "err"))
+                    writer.writerow((search_string, "0"))
                 else:
                     writer.writerow((search_string, results.text.split()[-1]))
     driver.close()
