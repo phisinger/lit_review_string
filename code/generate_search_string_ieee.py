@@ -27,14 +27,16 @@ for tp in trust_part:
                             search_string += " AND " + prop
                         if gen != "":
                             search_string += " " + gen
+                        print("before replacement: ", search_string)
                         # define placeholder replacement and replace
                         new_string = "\"" + location + "\":"
                         search_string = search_string.replace("XY", new_string)
+                        print("after replacement: ", search_string)
 
                         combination_list.append(search_string)
 
     # print(search_string)
 
 # write all search string to csv file
-with open("data/search_strings_ieee.csv", "w+", newline="") as f:
+with open("data/search_strings_ieee.txt", "w+",) as f:
     f.writelines(combination_list)

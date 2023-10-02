@@ -39,5 +39,5 @@ for tp in trust_part:
                     search_string += ")"
                     combination_list.append(search_string)
 
-with open("data/search_strings.csv", "w+") as f:
+with open("data/search_strings.txt", "w+") as f:
     f.writelines(combination_list)
