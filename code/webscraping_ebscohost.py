@@ -7,21 +7,28 @@ from selenium.webdriver.support import expected_conditions as EC
 import csv
 from time import sleep
 
+
+def is_error_message(driver, timeout=10):
+    """Function to check if a WebElement is on the page
+    It waits max timeout seconds until it returns that element is not on the page"""
+    try:
+        WebDriverWait(driver, timeout).until(
+            EC.presence_of_element_located(
+                (By.ID, "ctl00_ctl00_MainContentArea_MainContentArea_smartTextRanWarning"))
+        )
+        # If the element is found, return True
+        return True
+    except Exception:
+        return False
+
+
 # Read search strings
-with open("data/search_strings.csv", "r+", newline="") as csvf:
-    reader = csv.reader(csvf, delimiter=",")
+with open("data/search_strings_ebscohost.txt", "r+") as in_file:
     # define webdriver for browser
     driver = webdriver.Firefox()
-    for row in reader:
-        if row != []:
-            # prepare search string
-            search_string = row[0]
-            # Find the index of the first opening parenthesis
-            index_of_open_parenthesis = search_string.find("(")
-            # attach abbreviated search field
-            search_string = search_string[:2] + \
-                search_string[index_of_open_parenthesis:]
-
+    for line in in_file:
+        line = line.strip()
+        if line != "":
             # Navigate to the real search
             driver.get("https://search.ebscohost.com")
             driver.find_element(By.LINK_TEXT, "EBSCOhost Web").click()
@@ -47,7 +54,7 @@ with open("data/search_strings.csv", "r+", newline="") as csvf:
             # apply search strings
             search_bar = driver.find_element(By.ID, "Searchbox1")
             search_bar.clear()
-            search_bar.send_keys(search_string)
+            search_bar.send_keys(line)
             search_bar.send_keys(Keys.RETURN)
 
             # Read number of results
@@ -56,6 +63,9 @@ with open("data/search_strings.csv", "r+", newline="") as csvf:
             results = None
             while time.time() <= start_time + 12:
                 try:
+                    # Catch ebsohost error warning
+                    if is_error_message(driver):
+                        break
                     results = driver.find_element(
                         By.CSS_SELECTOR, ".page-title")
                     sleep(0.5)
@@ -67,7 +77,7 @@ with open("data/search_strings.csv", "r+", newline="") as csvf:
             with open("data/search_results_ebscohost.csv", "a+", newline="") as csvw:
                 writer = csv.writer(csvw, delimiter=";")
                 if results == None:
-                    writer.writerow((search_string, "0"))
+                    writer.writerow((line, "0"))
                 else:
-                    writer.writerow((search_string, results.text.split()[-1]))
+                    writer.writerow((line, results.text.split()[-1]))
     driver.close()

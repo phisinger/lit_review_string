@@ -2,19 +2,16 @@ import time
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 import csv
 from time import sleep
 
 # Read search strings
-with open("data/search_strings.csv", "r+", newline="") as csvf:
-    reader = csv.reader(csvf, delimiter=",")
+with open("data/search_strings_proquest.txt", "r+") as in_file:
     # define webdriver for browser
     driver = webdriver.Firefox()
-    for row in reader:
-        if row != []:
-            search_string = row[0]
+    for line in in_file:
+        line = line.strip()
+        if line != "":
             # set search parameters
             # set peer-reviewed
             driver.get("https://www.proquest.com")
@@ -28,7 +25,7 @@ with open("data/search_strings.csv", "r+", newline="") as csvf:
             search_form = driver.find_element(By.ID, "searchBoxZone")
             search_bar = search_form.find_elements(By.ID, "searchTerm")[0]
             search_bar.clear()
-            search_bar.send_keys(search_string)
+            search_bar.send_keys(line)
             search_bar.send_keys(Keys.RETURN)
 
             # Read number of results
@@ -48,10 +45,10 @@ with open("data/search_strings.csv", "r+", newline="") as csvf:
             with open("data/search_results_proquest.csv", "a+", newline="") as csvw:
                 writer = csv.writer(csvw, delimiter=";")
                 if results == None:
-                    writer.writerow((search_string, "0"))
+                    writer.writerow((line, "0"))
                 else:
                     hits = results.text.split()[0]
-                    writer.writerow((search_string, hits))
+                    writer.writerow((line, hits))
 
         else:
             # remove cookie banner, but only on the first visit

@@ -20,19 +20,18 @@ def is_element_clickable(driver, locator, timeout=10):
         return False
 
 
-is_title = True
 # Read search strings
-with open("data/search_strings.csv", "r+", newline="") as csvf:
-    reader = csv.reader(csvf, delimiter=",")
+with open("data/search_strings_acm.txt", "r+") as in_file:
     # define webdriver for browser
     driver = webdriver.Firefox()
-    for row in reader:
-        if row != []:
-            # delete prefix for ACM
-            search_string = row[0]
+    for line in in_file:
+        line = line.strip()
+        if line != "":
+            # Extract search field for ACM
             # Find the index of the first opening parenthesis
-            index_of_open_parenthesis = search_string.find("(")
-            search_string = search_string[index_of_open_parenthesis:]
+            index_of_open_parenthesis = line.find("(")
+            search_field = line[:index_of_open_parenthesis]
+            search_string = line[index_of_open_parenthesis:]
 
             driver.get("https://dl.acm.org/search/advanced")
             sleep(2)
@@ -40,17 +39,12 @@ with open("data/search_strings.csv", "r+", newline="") as csvf:
             search_within = driver.find_element(
                 By.ID, "searchArea1")
             all_options = search_within.find_elements(By.TAG_NAME, "option")
-            # Select either title or abstract to search for
+            # Select the right search field to search in
             for option in all_options:
-                if is_title and option.text == "Title":
+                if search_field.lower() == option.text.lower():
                     option.click()
-                    is_title = False
                     break
-                elif not is_title and option.text == "Abstract":
-                    option.click()
-                    is_title = True
-                    break
-            sleep(2)
+            sleep(1)
 
             # apply search strings
             search_bar = driver.find_elements(By.ID, "text1")[0]
@@ -97,10 +91,10 @@ with open("data/search_strings.csv", "r+", newline="") as csvf:
             with open("data/search_results_acm.csv", "a+", newline="") as csvw:
                 writer = csv.writer(csvw, delimiter=";")
                 if results == None:
-                    writer.writerow((row[0], "0"))
+                    writer.writerow((line, "0"))
                 else:
                     hits = results.text
-                    writer.writerow((row[0], hits))
+                    writer.writerow((line, hits))
         else:
             # accept cookies when opening site first
             driver.get("https://dl.acm.org/search/advanced")
