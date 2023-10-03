@@ -1,6 +1,6 @@
 # Literature Search String Generator and Assessment
 
-This repo contains code to generate and assess search strings for the literature review of my master thesis. As I found it hard to come up with a meaningful and good search string, I took a systematic way:
+This repo contains code to generate and try out search strings automatically for the literature review of my master thesis. As I found it hard to come up with a meaningful and good search string, I took a systematic way:
 
 1. There is one script constructing search strings by combining predefined text blocks
 2. For each database, I want to search through, I wrote a script that uses web scraping methods to automatically use databases' web searches to obtain the number of results to assess the search string quantitative.
