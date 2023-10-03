@@ -7,7 +7,7 @@ This repo contains code to generate and try out search strings automatically for
 
 ## Technologies and Requirements
 
-I used mainly selenium and a pre-installed Mozilla Firefox browser (see also conda [environment-file](environment.yml)). Searched databases are: ACM Library, AIS Library, IEEE Xplore, Ebscohost, Proquest and Web of Science (WOS). The scripts assume that you have access (e.g. by VPN) to these databases. The code is tested on WSL2 on Windows 11. The search strings and the results are stored in different text and CSV files [here](/data/).
+I used mainly selenium and a pre-installed Mozilla Firefox browser (see also conda [environment-file](environment.yml)). Searched databases are: ACM Library, AIS Library, IEEE Xplore, Ebscohost, Proquest and Web of Science (WOS). The scripts assume that you have access (e.g. by VPN) to these databases. The code is tested on WSL2 on Windows 11. The generated search strings and the results are stored in different text and CSV files in the [data](/data/) directory.
 
 ## Customization
 
