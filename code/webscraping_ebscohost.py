@@ -24,9 +24,10 @@ def is_error_message(driver, timeout=10):
 
 # Read search strings
 with open("data/search_strings_ebscohost.txt", "r+") as in_file:
+    lines = in_file.readlines()
     # define webdriver for browser
     driver = webdriver.Firefox()
-    for line in in_file:
+    for l_number, line in enumerate(lines):
         line = line.strip()
         if line != "":
             # Navigate to the real search
@@ -37,7 +38,7 @@ with open("data/search_strings_ebscohost.txt", "r+") as in_file:
                 By.ID, "ctl00_ctl00_MainContentArea_MainContentArea_Eplabel1").click()
             driver.find_element(
                 By.ID, "ctl00_ctl00_MainContentArea_MainContentArea_continue1").click()
-            sleep(4)
+            sleep(2)
 
             # set search settings
             # unselect search expansion
@@ -80,4 +81,14 @@ with open("data/search_strings_ebscohost.txt", "r+") as in_file:
                     writer.writerow((line, "0"))
                 else:
                     writer.writerow((line, results.text.split()[-1]))
+        # After the search result is successfully written,
+        # the search string is deleted from the search_string file.
+        # move file pointer to the beginning of a file
+        in_file.seek(0)
+        # truncate the file
+        in_file.truncate()
+        try:
+            in_file.writelines(lines[l_number+1:])
+        except:
+            pass
     driver.close()

@@ -9,9 +9,10 @@ from time import sleep
 # Read search strings
 lit_strings = []
 with open("data/search_strings_ieeexplore.txt", "r+", ) as in_file:
+    lines = in_file.readlines()
     # define webdriver for browser
     driver = webdriver.Firefox()
-    for line in in_file:
+    for l_number, line in enumerate(lines):
         line = line.strip()
         if line != "":
             driver.get("https://ieeexplore.ieee.org")
@@ -61,5 +62,14 @@ with open("data/search_strings_ieeexplore.txt", "r+", ) as in_file:
                     else:
                         hits = results.text[position:].split()[1]
                     writer.writerow((line, hits))
-
+        # After the search result is successfully written,
+        # the search string is deleted from the search_string file.
+        # move file pointer to the beginning of a file
+        in_file.seek(0)
+        # truncate the file
+        in_file.truncate()
+        try:
+            in_file.writelines(lines[l_number+1:])
+        except:
+            pass
     driver.close()

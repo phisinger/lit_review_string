@@ -8,9 +8,18 @@ from time import sleep
 
 # Read search strings
 with open("data/search_strings_wos.txt", "r+") as in_file:
+    lines = in_file.readlines()
     # define webdriver for browser
     driver = webdriver.Firefox()
-    for line in in_file:
+    # remove cookie banner, but only on the first visit
+    driver.get("https://www.webofscience.com/wos/woscc/basic-search")
+    sleep(6)
+
+    reject_button = driver.find_element(
+        By.ID, "onetrust-reject-all-handler")
+    reject_button.click()
+    sleep(1)
+    for l_number, line in enumerate(lines):
         line = line.strip()
         if line != "":
             # Extract search field for Web of Science
@@ -62,15 +71,15 @@ with open("data/search_strings_wos.txt", "r+") as in_file:
                 else:
                     hits = results.text
                     writer.writerow((line, hits))
-
-        else:
-            # remove cookie banner, but only on the first visit
-            driver.get("https://www.webofscience.com/wos/woscc/basic-search")
-            sleep(6)
-
-            reject_button = driver.find_element(
-                By.ID, "onetrust-reject-all-handler")
-            reject_button.click()
-            sleep(1)
+        # After the search result is successfully written,
+        # the search string is deleted from the search_string file.
+        # move file pointer to the beginning of a file
+        in_file.seek(0)
+        # truncate the file
+        in_file.truncate()
+        try:
+            in_file.writelines(lines[l_number+1:])
+        except:
+            pass
 
     driver.close()

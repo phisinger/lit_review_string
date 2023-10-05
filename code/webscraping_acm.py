@@ -20,11 +20,19 @@ def is_element_clickable(driver, locator, timeout=10):
         return False
 
 
+input_file = "data/search_strings_acm.txt"
+
 # Read search strings
-with open("data/search_strings_acm.txt", "r+") as in_file:
+with open(input_file, "r+") as in_file:
+    lines = in_file.readlines()
     # define webdriver for browser
     driver = webdriver.Firefox()
-    for line in in_file:
+    # accept cookies when opening site first
+    driver.get("https://dl.acm.org/search/advanced")
+    sleep(2)
+    driver.find_element(
+        By.ID, "CybotCookiebotDialogBodyLevelButtonLevelOptinDeclineAll").click()
+    for l_number, line in enumerate(lines):
         line = line.strip()
         if line != "":
             # Extract search field for ACM
@@ -95,10 +103,14 @@ with open("data/search_strings_acm.txt", "r+") as in_file:
                 else:
                     hits = results.text
                     writer.writerow((line, hits))
-        else:
-            # accept cookies when opening site first
-            driver.get("https://dl.acm.org/search/advanced")
-            sleep(2)
-            driver.find_element(
-                By.ID, "CybotCookiebotDialogBodyLevelButtonLevelOptinDeclineAll").click()
+        # After the search result is successfully written,
+        # the search string is deleted from the search_string file.
+        # move file pointer to the beginning of a file
+        in_file.seek(0)
+        # truncate the file
+        in_file.truncate()
+        try:
+            in_file.writelines(lines[l_number+1:])
+        except:
+            pass
     driver.close()
