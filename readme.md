@@ -4,6 +4,7 @@ This repo contains code to generate and try out search strings automatically for
 
 1. There is one script constructing search strings by combining predefined text blocks
 2. For each database, I want to search through, I wrote a script that uses web scraping methods to automatically use databases' web searches to obtain the number of results to assess the search string quantitative.
+   The webscraping scripts are removing the strings from the search_string text files. So, in case you need to pause the search or there is an error resulting in the program stopping, you can just restart the script and it will continue the search with the next search string.
 
 ## Technologies and Requirements
 

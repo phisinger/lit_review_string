@@ -12,12 +12,14 @@ with open("data/search_strings_proquest.txt", "r+") as in_file:
     driver = webdriver.Firefox()
     # remove cookie banner, but only on the first visit
     driver.get("https://www.proquest.com")
-    sleep(2)
-
-    reject_button = driver.find_element(
-        By.ID, "onetrust-reject-all-handler")
-    reject_button.click()
-    sleep(1)
+    sleep(5)
+    try:
+        reject_button = driver.find_element(
+            By.ID, "onetrust-reject-all-handler")
+        reject_button.click()
+        sleep(2)
+    except:
+        pass
     for l_number, line in enumerate(lines):
         line = line.strip()
         if line != "":

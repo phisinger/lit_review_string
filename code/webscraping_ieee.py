@@ -50,7 +50,7 @@ with open("data/search_strings_ieeexplore.txt", "r+", ) as in_file:
                     # print(e)
                     continue
             # write results directly together with search string into csv file
-            with open("data/search_results_ieee.csv", "a+", newline="") as csvw:
+            with open("data/search_results_ieee.csv", "a+") as csvw:
                 writer = csv.writer(csvw, delimiter=";")
                 if results == None:
                     writer.writerow((line, "0"))
