@@ -21,20 +21,13 @@ search_terms = [
      "(trade-off* OR tradeoff* OR characteristic*)", "(trade-off* OR tradeoff*) AND characteristic*"]  # ,
     # ["", "NOT (generative OR Transformer* OR ChatGPT OR (Large AND Language AND Model))"],
 ]
-search_terms = [
-    ["Artificial AND Intelligence", "((Artificial AND Intelligence) OR AI)",
-     "((Artificial AND Intelligence) OR AI OR ML OR (Machine AND Learning))"],
-    ["Platform", "Development", "Development AND Platform"],
-    ["", "characteristic*", "(trade-off* OR tradeoff*)",
-     "(trade-off* OR tradeoff* OR characteristic*)", "(trade-off* OR tradeoff*) AND characteristic*"]  # ,
-    # ["", "NOT (generative OR Transformer* OR ChatGPT OR (Large AND Language AND Model))"],
-]
+
 # Specify the Name of the fields you want to search in
 # Please make sure that the names are correct for the database you want to search in
 # If you don't want to specify a field, then you should enter an empty string.
 fields_to_search = ["", "TITLE", "ABSTRACT"]
 fields_to_search_acm = ["", "TITLE", "ABSTRACT", "Full text"]
-fields_to_search_ebscohost = ["TI", "AB", "TX"]  # ["", "TI", "AB", "TX"]
+fields_to_search_ebscohost = ["", "TI", "AB", "TX"]
 fields_to_search_proquest = ["", "TI", "AB", "FT"]
 fields_to_search_ieee = ["", "Document Title", "Abstract", "Full Text Only"]
 
@@ -112,9 +105,9 @@ def create_search_string(search_terms: list, fields_to_search: list, database: s
 
 if __name__ == "__main__":
     # by default strings for all databases are generated
-    # create_search_string(search_terms, fields_to_search_ieee, "ieeexplore")
-    # create_search_string(search_terms, fields_to_search_acm, "acm")
-    # create_search_string(search_terms, fields_to_search, "ais")
+    create_search_string(search_terms, fields_to_search_ieee, "ieeexplore")
+    create_search_string(search_terms, fields_to_search_acm, "acm")
+    create_search_string(search_terms, fields_to_search, "ais")
     create_search_string(search_terms, fields_to_search_ebscohost, "ebscohost")
-    # create_search_string(search_terms, fields_to_search_proquest, "proquest")
-    # create_search_string(search_terms, fields_to_search, "web of science")
+    create_search_string(search_terms, fields_to_search_proquest, "proquest")
+    create_search_string(search_terms, fields_to_search, "web of science")
