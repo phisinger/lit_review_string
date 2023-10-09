@@ -13,3 +13,8 @@ I used mainly selenium and a pre-installed Mozilla Firefox browser (see also con
 ## Customization
 
 As you can see in the [create_search_string.py](code/create_search_string.py) some of the databases expect abbreviated keywords for the search fields, some not, and some use other words than standards. Please make sure you generate the search strings with the right corresponding search fields.
+
+## Demo
+https://github.com/phisinger/lit_review_string/assets/44365625/70300def-3dd8-4a84-bdc6-9033ee3dd566
+
+
